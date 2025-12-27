@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jarvis Web</title>
+    <style>
+        body { background: #0f0f0f; color: #00e5ff; font-family: 'Courier New', monospace; text-align: center; }
+        #chat-box { width: 80%; margin: 50px auto; border: 1px solid #00e5ff; height: 400px; overflow-y: scroll; padding: 20px; }
+        input { width: 70%; padding: 10px; background: none; border: 1px solid #00e5ff; color: white; }
+        button { padding: 10px 20px; background: #00e5ff; color: black; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>JARVIS SYSTEM v1.0</h1>
+    <div id="chat-box"></div>
+    <input type="text" id="userInput" placeholder="Buyruq bering...">
+    <button onclick="sendMessage()">YUBORISH</button>
+
+    <script>
+        function sendMessage() {
+            let input = document.getElementById("userInput");
+            let chat = document.getElementById("chat-box");
+            
+            chat.innerHTML += "<p><b>Siz:</b> " + input.value + "</p>";
+            
+            fetch('/ask', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: input.value})
+            })
+            .then(res => res.json())
+            .then(data => {
+                chat.innerHTML += "<p style='color: #fff'><b>Jarvis:</b> " + data.reply + "</p>";
+                input.value = "";
+                chat.scrollTop = chat.scrollHeight;
+            });
+        }
+    </script>
+</body>
+</html>
